@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For You ❤️</title>
+<script src="https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.js"></script>
+<style>
+body {
+  text-align: center;
+  background: #ffe4ec;
+  font-family: Arial;
+  padding: 20px;
+}
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  max-width: 500px;
+  margin: auto;
+  box-shadow: 0 4px 15px #e9a5bd;
+}
+h1 { color: #e83e78; }
+button {
+  background: #ff4081;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 20px;
+  font-size: 16px;
+}
+pre {
+  background: #fff0f5;
+  padding: 12px;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  text-align: left;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>For My Special Person ❤️</h1>
+  <p>Someone has a message for you! 🥹💗</p>
+  <h3>My Python Code 🐍</h3>
+  <pre id="code"></pre>
+  <button onclick="runCode()">Run 💕</button>
+  <h3>Output 💌</h3>
+  <pre id="output">Loading your surprise... 💖</pre>
+</div>
+<script>
+const code = `print("Hello, My Love ❤️")
+print("You are special to me 🥹")
+print("You make my world brighter 💗")
+print("Sending you lots of love! 🫶")`;
+
+document.getElementById("code").textContent = code;
+
+let pyodideReady;
+async function runCode() {
+  const output = document.getElementById("output");
+  output.textContent = "Loading Python... 💕";
+  try {
+    pyodideReady ??= loadPyodide();
+    const pyodide = await pyodideReady;
+    output.textContent = await pyodide.runPythonAsync(
+      `import sys
+from io import StringIO
+old = sys.stdout
+sys.stdout = StringIO()
+${code}
+result = sys.stdout.getvalue()
+sys.stdout = old
+result`
+    );
+  } catch (e) {
+    output.textContent = "Please check your internet and try again.";
+  }
+}
+runCode();
+</script>
+</body>
+</html>
